@@ -46,13 +46,16 @@ function deletediv(currentElement){
     console.log(key);
     localStorage.removeItem(key);
     if(localStorage.length==0){
-        document.querySelector(".history").innerHTML = "<div class='empty'><img src='https://cdn-icons-png.flaticon.com/512/1380/1380641.png' alt='history.png'><span>Your searching history is empty</span></div>";
+        document.querySelector(".history").innerHTML = "<div class='empty'><img src='https://cdn-icons-png.flaticon.com/512/1380/1380641.png' alt='image'><span>Your searching history is empty</span></div>";
     }
 }
 let res;
 search.addEventListener("click",()=>{
-    document.querySelector(".searching").innerText = "Searching for the meaning....";
     let inVal = inp.value;
+    if(inVal===""){
+        return;
+    }
+    document.querySelector(".searching").innerText = "Searching for the meaning...."; 
     fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${inVal}`).then((response)=>response.json())
     .then(data => {
         if(data.title){
@@ -61,7 +64,9 @@ search.addEventListener("click",()=>{
         }
         else{
             localStorage.setItem(`${inVal}`,data[0].meanings[0].definitions[0].definition);
-            document.querySelector(".result").innerHTML = data[0].meanings[0].definitions[0].definition+"<br><br>Example: "+data[0].meanings[0].definitions[0].example;
+            // console.log(data);
+            document.querySelector(".result").innerHTML = 
+            data[0].meanings[0].definitions[0].definition+"<br><br>Example: "+data[0].meanings[0].definitions[0].example;
             document.querySelector(".inpword").innerHTML = inVal+"<img src='https://cdn-icons-png.flaticon.com/512/727/727269.png' alt='logo' class='mp3icon' onclick='playmp3()'>";
             inp.value = "";
         }
